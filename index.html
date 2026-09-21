@@ -525,6 +525,198 @@ select{
     0 0 22px rgba(47,158,91,.19)!important;
 }
 
+
+/* ===== MOBILE REDESIGN — visibly different ===== */
+@media (max-width: 700px){
+  html,body{width:100%;overflow-x:hidden}
+  .app{
+    max-width:none!important;
+    width:100%!important;
+    padding:18px 12px 60px!important;
+  }
+
+  /* Header */
+  .eyebrow{font-size:9px!important;letter-spacing:.18em!important}
+  h1{
+    font-size:30px!important;
+    line-height:1!important;
+    margin:5px 0 8px!important;
+  }
+  #status{font-size:11px!important;line-height:1.35!important}
+  .toolbar{margin:14px 0 8px!important}
+  .upload{
+    display:block!important;
+    width:100%!important;
+    padding:14px!important;
+    border-radius:13px!important;
+    text-align:center!important;
+    font-size:14px!important;
+  }
+  .note{font-size:10px!important;margin:8px 1px 14px!important}
+
+  /* Overview becomes compact */
+  .hero{
+    padding:16px!important;
+    border-radius:17px!important;
+  }
+  .top{align-items:flex-start!important}
+  .pctbig{font-size:46px!important;line-height:.9!important}
+  #date{
+    max-width:42%!important;
+    font-size:10px!important;
+    text-align:right!important;
+    line-height:1.3!important;
+  }
+  .barbg{height:7px!important;margin:11px 0 13px!important}
+  .metrics{gap:5px!important}
+  .metric{
+    padding:10px 2px!important;
+    min-height:63px!important;
+    border-radius:10px!important;
+  }
+  .metric b{font-size:20px!important}
+  .metric span{font-size:7px!important;letter-spacing:.06em!important}
+
+  /* Section labels */
+  .section{
+    margin:22px 2px 8px!important;
+    font-size:9px!important;
+    letter-spacing:.15em!important;
+  }
+
+  /* Readiness changes from horizontal desktop card to compact mobile tile */
+  .card{padding:13px!important;border-radius:15px!important}
+  .gaugewrap{
+    display:grid!important;
+    grid-template-columns:72px minmax(0,1fr)!important;
+    gap:12px!important;
+    align-items:center!important;
+  }
+  .gauge{
+    width:72px!important;
+    height:72px!important;
+  }
+  .gauge:after{
+    width:52px!important;
+    height:52px!important;
+  }
+  .gaugevalue{font-size:17px!important}
+  .readiness b{
+    display:block!important;
+    font-size:16px!important;
+    line-height:1.1!important;
+    margin-bottom:4px!important;
+  }
+  .readiness .small{font-size:10px!important;line-height:1.35!important}
+
+  /* Service coverage: 3 compact cards instead of tall cards */
+  .servicegrid{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:6px!important;
+  }
+  .servicegrid .card{padding:11px 12px!important}
+  .servicegrid .head b{font-size:13px!important}
+  .servicegrid .yellow{font-size:13px!important}
+  .servicegrid .small{font-size:9px!important}
+  .servicegrid .mini{height:5px!important;margin-top:7px!important}
+
+  /* Heat map fills phone width and scrolls only if truly necessary */
+  .visualgrid{display:block!important}
+  .heat{overflow-x:auto!important;margin:0!important}
+  .heatgrid{
+    min-width:0!important;
+    width:100%!important;
+    grid-template-columns:minmax(78px,1.2fr) repeat(3,minmax(52px,.8fr))!important;
+    gap:3px!important;
+  }
+  .heatcell{
+    padding:7px 2px!important;
+    font-size:9px!important;
+    border-radius:6px!important;
+  }
+  .heathead{font-size:7px!important}
+  .heatlabel{
+    font-size:8px!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+
+  /* Biggest needs becomes a compact mobile list */
+  .priority{gap:5px!important}
+  .prioritycard{
+    grid-template-columns:25px minmax(0,1fr) auto!important;
+    gap:7px!important;
+    padding:9px!important;
+    border-radius:12px!important;
+  }
+  .rank{
+    width:25px!important;
+    height:25px!important;
+    border-radius:7px!important;
+    font-size:10px!important;
+  }
+  .prioritycard b{font-size:11px!important}
+  .prioritycard .small{font-size:8px!important}
+  .pill{
+    padding:4px 6px!important;
+    font-size:8px!important;
+  }
+
+  /* Area coverage is much denser */
+  #attention{gap:6px!important}
+  #attention .card{padding:11px 12px!important}
+  #attention .head b{font-size:12px!important}
+  #attention .small{font-size:9px!important}
+  #attention .yellow{font-size:12px!important}
+  #attention .mini{height:5px!important;margin-top:7px!important}
+
+  /* Filters stacked and touch friendly */
+  .filters{
+    grid-template-columns:1fr!important;
+    gap:6px!important;
+    margin-bottom:8px!important;
+  }
+  .filters select{
+    min-height:43px!important;
+    padding:0 12px!important;
+    border-radius:12px!important;
+    font-size:13px!important;
+  }
+
+  /* Roles */
+  #roles{gap:5px!important}
+  .area-subhead{
+    margin:16px 1px 4px!important;
+    padding:5px 1px!important;
+    font-size:9px!important;
+  }
+  .role{
+    grid-template-columns:minmax(0,1fr) auto!important;
+    padding:10px 11px!important;
+    gap:7px!important;
+  }
+  .role b{font-size:11px!important}
+  .role .small{font-size:8px!important}
+  .role .yellow{
+    font-size:9px!important;
+    white-space:nowrap!important;
+    align-self:center!important;
+  }
+
+  .footer{font-size:8px!important;margin-top:20px!important}
+  .sticky{font-size:9px!important;padding:8px 10px!important}
+}
+
+/* Extra-small iPhones */
+@media (max-width: 390px){
+  .app{padding-left:9px!important;padding-right:9px!important}
+  h1{font-size:28px!important}
+  .pctbig{font-size:42px!important}
+  .metric b{font-size:18px!important}
+  .heatgrid{grid-template-columns:72px repeat(3,minmax(48px,1fr))!important}
+}
+
 </style></head>
 <body><main class="app">
 <div class="sticky" id="sticky"><span>THIS SUNDAY</span><span id="stickyStat">—</span></div><div class="eyebrow">First Orlando KIDS</div><h1>Sunday Coverage</h1><div class="sub" id="status">Upload your regular KIDS Weekly Coverage Excel file.</div>
