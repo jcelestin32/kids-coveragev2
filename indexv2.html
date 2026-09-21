@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KIDS Weekly Coverage</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+:root{--bg:#0a0a0a;--card:#171717;--card2:#222;--line:#303030;--text:#fafafa;--muted:#aaa;--accent:#ffd400}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}.app{max-width:760px;margin:auto;padding:22px 16px 48px}
+.eyebrow,.section{font-size:12px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}.eyebrow{color:var(--accent)}.section{color:var(--muted);margin:24px 2px 10px}
+h1{font-size:28px;margin:5px 0}.sub,.small{color:var(--muted);font-size:13px}.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:18px 0}.upload{background:var(--accent);color:#111;font-weight:900;border-radius:12px;padding:12px 15px;cursor:pointer}.upload input{display:none}
+select{background:var(--card);border:1px solid var(--line);color:var(--text);padding:11px;border-radius:12px;font:inherit}
+.hero,.card{background:var(--card);border:1px solid var(--line);border-radius:18px}.hero{padding:18px}.top{display:flex;justify-content:space-between;align-items:end;gap:10px}.pctbig{font-size:52px;font-weight:950;letter-spacing:-.06em}.barbg,.mini{background:#2b2b2b;border-radius:99px;overflow:hidden}.barbg{height:9px;margin:12px 0 17px}.bar,.minibar{height:100%;background:var(--accent)}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.metric{background:var(--card2);border-radius:13px;padding:12px;text-align:center}.metric b{display:block;font-size:24px}.metric span{font-size:10px;color:var(--muted);font-weight:900;letter-spacing:.08em}
+.cards{display:grid;gap:10px}.card{padding:15px}.head{display:flex;justify-content:space-between;align-items:center}.head b{font-size:17px}.yellow{color:var(--accent);font-weight:950}.mini{height:6px;margin-top:10px}
+.attn{display:grid;grid-template-columns:1fr auto;align-items:center}.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.filters select{width:100%;min-width:0}.role{display:grid;grid-template-columns:1fr auto;gap:8px}.area-subhead{margin:18px 2px 3px;padding:8px 2px 7px;color:var(--accent);font-size:12px;font-weight:950;letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--line)}.role b{font-size:14px}.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:16px}.note{font-size:11px;color:#777;margin:8px 0 18px}.footer{text-align:center;color:#666;font-size:11px;margin-top:28px}
+
+.visualgrid{display:grid;gap:10px}
+.gaugewrap{display:flex;align-items:center;gap:18px;margin-top:14px}
+.gauge{--p:0;width:112px;height:112px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p)*1%),#2b2b2b 0);display:grid;place-items:center;flex:0 0 auto}
+.gauge:after{content:"";width:82px;height:82px;border-radius:50%;background:var(--card);position:absolute}
+.gauge{position:relative}.gaugevalue{position:relative;z-index:1;font-size:26px;font-weight:950}
+.readiness{flex:1}.readiness b{font-size:18px}.readiness .small{margin-top:5px}
+.heat{overflow-x:auto}.heatgrid{display:grid;grid-template-columns:minmax(125px,1.4fr) repeat(3,minmax(70px,1fr));gap:6px;min-width:390px}
+.heatcell{padding:10px 7px;border-radius:10px;background:var(--card2);font-size:12px;text-align:center;font-weight:900}
+.heatlabel{text-align:left;font-weight:800}.heathead{color:var(--muted);background:transparent;font-size:10px;letter-spacing:.06em}
+.heat100{background:#ffd400;color:#111}.heat85{background:#8f7b12;color:#fff}.heat70{background:#5d521d;color:#fff}.heatlow{background:#342f1e;color:#ffd400}
+.gaps{display:grid;gap:8px}.gaprow{display:grid;grid-template-columns:minmax(105px,1fr) 2.4fr auto;gap:9px;align-items:center}
+.gapname{font-size:12px;font-weight:800}.gaptrack{height:12px;background:#2b2b2b;border-radius:99px;overflow:hidden}.gapbar{height:100%;background:var(--accent);border-radius:99px}.gapnum{font-size:12px;font-weight:950;color:var(--accent);min-width:42px;text-align:right}
+.priority{display:grid;gap:9px}.prioritycard{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px}.rank{width:32px;height:32px;border-radius:10px;background:var(--accent);color:#111;display:grid;place-items:center;font-weight:950}.pill{border:1px solid #5a4d00;background:#2c270f;color:var(--accent);padding:6px 8px;border-radius:99px;font-size:11px;font-weight:950;white-space:nowrap}
+.sticky{position:sticky;top:8px;z-index:20;display:none;background:rgba(23,23,23,.94);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:14px;padding:9px 12px;margin:0 0 10px;font-size:12px;font-weight:850;box-shadow:0 8px 25px rgba(0,0,0,.25)}
+@media(max-width:520px){.gauge{width:94px;height:94px}.gauge:after{width:68px;height:68px}.gaugevalue{font-size:22px}.sticky.show{display:flex;justify-content:space-between}}
+@media(min-width:620px){.servicegrid{grid-template-columns:repeat(3,1fr)}.visualgrid{grid-template-columns:1fr 1fr}}
+
+
+/* Exact visual direction based on supplied mockup */
+:root{
+  --bg:#05070a;
+  --card:rgba(24,27,32,.72);
+  --card2:rgba(255,255,255,.045);
+  --line:rgba(194,204,220,.34);
+  --text:#f5f5f7;
+  --muted:#aeb5c3;
+  --accent:#ffd43b;
+}
+*{box-sizing:border-box}
+html{background:#05070a}
+body{
+  color:var(--text)!important;
+  background:
+    radial-gradient(720px 500px at -10% 18%,rgba(226,164,39,.22),transparent 56%),
+    radial-gradient(850px 600px at 84% -15%,rgba(213,166,68,.23),transparent 56%),
+    radial-gradient(720px 520px at 110% 40%,rgba(55,87,124,.20),transparent 58%),
+    radial-gradient(760px 520px at 92% 92%,rgba(218,159,39,.17),transparent 58%),
+    linear-gradient(135deg,#06080b 0%,#090c10 45%,#040608 100%)!important;
+  background-attachment:fixed!important;
+}
+.app{max-width:1120px!important;padding:36px 34px 90px!important}
+.eyebrow{
+  color:#b9c1d0!important;font-size:13px!important;font-weight:850!important;
+  letter-spacing:.23em!important;margin-bottom:14px!important
+}
+h1{
+  color:#f5f5f7!important;font-size:48px!important;line-height:.98!important;
+  letter-spacing:-.05em!important;font-weight:900!important;margin:0 0 16px!important
+}
+.sub{color:#aeb5c3!important;font-size:18px!important}
+.actions{margin:22px 0 10px!important}
+.upload{
+  background:linear-gradient(145deg,rgba(255,255,255,.17),rgba(91,111,138,.14))!important;
+  color:#fff!important;border:1px solid rgba(207,218,235,.44)!important;
+  border-radius:19px!important;padding:15px 23px!important;font-size:17px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 14px 32px rgba(0,0,0,.32),
+             0 0 24px rgba(95,151,215,.08)!important;
+  backdrop-filter:blur(28px) saturate(145%)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(145%)!important;
+}
+.hero,.card,.prioritycard{
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.095),rgba(255,255,255,.025) 48%,rgba(84,102,126,.075))!important;
+  border:1px solid rgba(202,211,225,.31)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.11),0 24px 60px rgba(0,0,0,.30)!important;
+  backdrop-filter:blur(34px) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(34px) saturate(125%)!important;
+}
+.hero{border-radius:28px!important;padding:30px!important;margin-top:24px!important}
+.pctbig,.big{font-size:68px!important;line-height:.92!important;letter-spacing:-.065em!important;font-weight:950!important}
+.hero .small{font-size:14px!important;letter-spacing:.16em!important;color:#c2c7d1!important;font-weight:850!important}
+.barbg{height:14px!important;background:rgba(255,255,255,.11)!important;border-radius:999px!important;margin:18px 0 26px!important}
+.bar{background:linear-gradient(90deg,#ffd83d,#ffd43b)!important;box-shadow:0 0 22px rgba(255,212,59,.28)!important}
+.metrics{gap:18px!important}
+.metric{
+  min-height:116px!important;padding:22px 20px!important;border-radius:20px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025))!important;
+  border:1px solid rgba(205,215,229,.24)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+.metric b{font-size:36px!important;letter-spacing:-.04em!important}
+.metric span{font-size:12px!important;letter-spacing:.16em!important;color:#b6bdca!important}
+.section{
+  margin:34px 4px 13px!important;color:#bcc4d2!important;font-size:13px!important;
+  font-weight:900!important;letter-spacing:.20em!important
+}
+.card{border-radius:26px!important;padding:22px!important}
+.gaugewrap{gap:28px!important}
+.gauge{
+  width:132px!important;height:132px!important;
+  background:conic-gradient(#ffd43b calc(var(--p)*1%),rgba(172,184,202,.19) 0)!important;
+  box-shadow:0 0 30px rgba(255,212,59,.10)!important
+}
+.gauge:after{width:96px!important;height:96px!important;background:#101318!important}
+.gaugevalue{font-size:29px!important}
+.readiness b{font-size:25px!important;letter-spacing:-.025em!important}
+.readiness .small{font-size:16px!important;color:#aeb5c3!important}
+.servicegrid{gap:16px!important}
+.mini{height:9px!important;background:rgba(255,255,255,.10)!important}
+.minibar{background:#ffd43b!important;box-shadow:0 0 14px rgba(255,212,59,.20)!important}
+.yellow,.area-subhead{color:#ffd43b!important}
+.rank{background:#ffd43b!important;color:#111!important}
+.pill{color:#ffd43b!important;background:rgba(255,212,59,.08)!important;border-color:rgba(255,212,59,.28)!important}
+select{
+  background:rgba(255,255,255,.065)!important;color:#f5f5f7!important;
+  border:1px solid rgba(205,215,229,.25)!important;border-radius:16px!important;
+  backdrop-filter:blur(24px)!important;-webkit-backdrop-filter:blur(24px)!important
+}
+.heatcell{border-color:rgba(255,255,255,.07)!important}
+.heat100{background:#ffd43b!important;color:#111!important}
+.heat85{background:rgba(255,212,59,.56)!important}
+.heat70{background:rgba(255,212,59,.31)!important}
+.heatlow{background:rgba(255,212,59,.11)!important;color:#ffd43b!important}
+.sticky{
+  background:rgba(18,21,26,.72)!important;border-color:rgba(205,215,229,.25)!important;
+  backdrop-filter:blur(28px)!important;-webkit-backdrop-filter:blur(28px)!important
+}
+@media(min-width:760px){
+  .actions{display:flex!important;justify-content:flex-end!important;align-items:center!important;margin-top:-72px!important;margin-bottom:62px!important}
+}
+@media(max-width:759px){
+  .app{padding:24px 16px 70px!important}
+  h1{font-size:38px!important}
+  .pctbig,.big{font-size:58px!important}
+  .hero{padding:22px!important}
+  .metric{min-height:94px!important;padding:16px 8px!important}
+  .metric b{font-size:28px!important}
+  .gauge{width:104px!important;height:104px!important}
+  .gauge:after{width:76px!important;height:76px!important}
+}
+
+
+/* Subtle accent glow */
+.bar,.minibar{
+  box-shadow:
+    0 0 8px rgba(255,212,59,.22),
+    0 0 18px rgba(255,212,59,.10)!important;
+}
+.gauge{
+  filter:drop-shadow(0 0 7px rgba(255,212,59,.16));
+}
+.yellow,.area-subhead{
+  text-shadow:0 0 10px rgba(255,212,59,.12);
+}
+.rank{
+  box-shadow:0 0 12px rgba(255,212,59,.14);
+}
+.pill{
+  box-shadow:0 0 10px rgba(255,212,59,.07);
+}
+.heat100{
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.10),0 0 10px rgba(255,212,59,.11)!important;
+}
+
+
+/* Stronger accent glow */
+.bar,.minibar{
+  box-shadow:
+    0 0 8px rgba(255,212,59,.55),
+    0 0 20px rgba(255,212,59,.32),
+    0 0 38px rgba(255,212,59,.14)!important;
+}
+.gauge{
+  filter:
+    drop-shadow(0 0 7px rgba(255,212,59,.42))
+    drop-shadow(0 0 18px rgba(255,212,59,.18))!important;
+}
+.yellow,.area-subhead{
+  text-shadow:
+    0 0 8px rgba(255,212,59,.30),
+    0 0 18px rgba(255,212,59,.12)!important;
+}
+.rank{
+  box-shadow:
+    0 0 10px rgba(255,212,59,.38),
+    0 0 24px rgba(255,212,59,.14)!important;
+}
+.pill{
+  box-shadow:
+    0 0 10px rgba(255,212,59,.18),
+    0 0 22px rgba(255,212,59,.08)!important;
+}
+.heat100{
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.12),
+    0 0 12px rgba(255,212,59,.32),
+    0 0 26px rgba(255,212,59,.12)!important;
+}
+
+
+/* Gold glow + clearer glass treatment */
+:root{
+  --accent:#e6b84a;
+}
+
+/* Warmer, richer gold accent */
+.bar,.minibar{
+  background:linear-gradient(90deg,#d7a52d 0%,#f0c85b 55%,#e3ad31 100%)!important;
+  box-shadow:
+    0 0 7px rgba(230,184,74,.68),
+    0 0 20px rgba(201,145,36,.38),
+    0 0 42px rgba(176,117,19,.18)!important;
+}
+.gauge{
+  background:conic-gradient(#e6b84a calc(var(--p)*1%),rgba(172,184,202,.16) 0)!important;
+  filter:
+    drop-shadow(0 0 7px rgba(230,184,74,.48))
+    drop-shadow(0 0 20px rgba(184,126,26,.22))!important;
+}
+.yellow,.area-subhead{
+  color:#e9bd52!important;
+  text-shadow:
+    0 0 8px rgba(230,184,74,.36),
+    0 0 20px rgba(181,120,20,.16)!important;
+}
+.rank{
+  background:linear-gradient(145deg,#f0c85b,#d7a52d)!important;
+  box-shadow:
+    0 0 10px rgba(230,184,74,.44),
+    0 0 25px rgba(176,117,19,.18)!important;
+}
+.pill{
+  color:#efc75a!important;
+  background:rgba(218,164,49,.10)!important;
+  border-color:rgba(230,184,74,.34)!important;
+  box-shadow:0 0 18px rgba(176,117,19,.11)!important;
+}
+.heat100{
+  background:#e6b84a!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.25),
+    0 0 13px rgba(230,184,74,.38),
+    0 0 30px rgba(176,117,19,.15)!important;
+}
+.heat85{background:rgba(205,157,54,.60)!important}
+.heat70{background:rgba(190,139,39,.34)!important}
+.heatlow{background:rgba(175,119,24,.13)!important;color:#e9bd52!important}
+
+/* More transparent glass cards */
+.hero,.card,.prioritycard{
+  background:
+    linear-gradient(145deg,
+      rgba(255,255,255,.105) 0%,
+      rgba(255,255,255,.047) 38%,
+      rgba(102,119,143,.055) 70%,
+      rgba(255,255,255,.026) 100%)!important;
+  border:1px solid rgba(222,229,239,.25)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.16),
+    inset 1px 0 0 rgba(255,255,255,.045),
+    0 24px 65px rgba(0,0,0,.31)!important;
+  backdrop-filter:blur(42px) saturate(145%) brightness(1.06)!important;
+  -webkit-backdrop-filter:blur(42px) saturate(145%) brightness(1.06)!important;
+}
+
+/* Glass within glass */
+.metric{
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.028))!important;
+  border:1px solid rgba(225,232,242,.18)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.11),
+    0 8px 28px rgba(0,0,0,.13)!important;
+  backdrop-filter:blur(24px) saturate(130%)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(130%)!important;
+}
+
+/* Slight specular highlight along major cards */
+.hero,.card{
+  position:relative;
+  overflow:hidden;
+}
+.hero:before,.card:before{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+  inset:0;
+  border-radius:inherit;
+  background:linear-gradient(118deg,rgba(255,255,255,.075),transparent 22%,transparent 72%,rgba(255,255,255,.025));
+  opacity:.65;
+}
+
+/* Keep content above highlight */
+.hero>*,
+.card>*{position:relative;z-index:1}
+
+
+/* Artlist-inspired: cinematic black, restrained glass, warm gold accent */
+:root{
+  --bg:#090909;
+  --card:#151515;
+  --card2:#1c1c1c;
+  --line:rgba(255,255,255,.10);
+  --text:#f4f4f2;
+  --muted:#929292;
+  --accent:#d7ad48;
+}
+html,body{background:#090909!important}
+body{
+  background:
+    radial-gradient(700px 440px at 90% 2%,rgba(201,157,58,.09),transparent 62%),
+    radial-gradient(650px 420px at 0% 40%,rgba(255,255,255,.025),transparent 64%),
+    #090909!important;
+}
+.app{max-width:1040px!important;padding:38px 28px 90px!important}
+.eyebrow{
+  color:#d7ad48!important;
+  font-size:11px!important;
+  letter-spacing:.20em!important;
+}
+h1{
+  font-size:46px!important;
+  font-weight:800!important;
+  letter-spacing:-.045em!important;
+  line-height:1!important;
+}
+.sub{color:#8e8e8e!important;font-size:15px!important}
+.upload{
+  background:#f1f1ef!important;
+  color:#101010!important;
+  border:0!important;
+  border-radius:999px!important;
+  padding:13px 20px!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+.hero,.card,.prioritycard{
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018))!important;
+  border:1px solid rgba(255,255,255,.095)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 18px 50px rgba(0,0,0,.22)!important;
+  backdrop-filter:blur(20px) saturate(110%)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(110%)!important;
+}
+.hero{border-radius:20px!important;padding:26px!important}
+.card,.prioritycard{border-radius:18px!important}
+.big,.pctbig{font-size:62px!important;font-weight:850!important;letter-spacing:-.06em!important}
+.section{
+  color:#aaa!important;
+  font-size:10px!important;
+  letter-spacing:.19em!important;
+  margin-top:30px!important;
+}
+.metric{
+  background:rgba(255,255,255,.032)!important;
+  border:1px solid rgba(255,255,255,.075)!important;
+  border-radius:14px!important;
+  box-shadow:none!important;
+}
+.metric b{font-size:30px!important}
+.metric span{color:#858585!important}
+.barbg,.mini{
+  background:rgba(255,255,255,.085)!important;
+}
+.bar,.minibar{
+  background:linear-gradient(90deg,#c8972e,#e1bd64)!important;
+  box-shadow:
+    0 0 8px rgba(215,173,72,.30),
+    0 0 22px rgba(174,126,31,.13)!important;
+}
+.gauge{
+  background:conic-gradient(#d7ad48 calc(var(--p)*1%),rgba(255,255,255,.09) 0)!important;
+  filter:drop-shadow(0 0 10px rgba(215,173,72,.18))!important;
+}
+.gauge:after{background:#111!important}
+.yellow,.area-subhead{
+  color:#d7ad48!important;
+  text-shadow:none!important;
+}
+.rank{
+  background:#d7ad48!important;
+  color:#111!important;
+  box-shadow:none!important;
+}
+.pill{
+  background:rgba(215,173,72,.08)!important;
+  border-color:rgba(215,173,72,.22)!important;
+  color:#d7ad48!important;
+  box-shadow:none!important;
+}
+select{
+  background:#151515!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  border-radius:999px!important;
+  color:#eee!important;
+  box-shadow:none!important;
+}
+.heatcell{
+  border-radius:8px!important;
+  border-color:rgba(255,255,255,.055)!important;
+}
+.heat100{
+  background:#d7ad48!important;
+  color:#101010!important;
+  box-shadow:0 0 16px rgba(215,173,72,.12)!important;
+}
+.heat85{background:rgba(215,173,72,.46)!important}
+.heat70{background:rgba(215,173,72,.24)!important}
+.heatlow{background:rgba(215,173,72,.08)!important;color:#d7ad48!important}
+.hero:before,.card:before{display:none!important}
+.sticky{
+  background:rgba(13,13,13,.88)!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  backdrop-filter:blur(18px)!important;
+  -webkit-backdrop-filter:blur(18px)!important;
+}
+@media(min-width:760px){
+  .actions{
+    display:flex!important;
+    justify-content:flex-end!important;
+    margin-top:-60px!important;
+    margin-bottom:55px!important;
+  }
+}
+
+
+/* Covered / 100% success state */
+:root{--success:#5ee08a}
+
+.heat100{
+  background:#5ee08a!important;
+  color:#07110a!important;
+  border-color:rgba(94,224,138,.65)!important;
+  box-shadow:
+    0 0 8px rgba(94,224,138,.55),
+    0 0 22px rgba(94,224,138,.28),
+    0 0 40px rgba(94,224,138,.12)!important;
+}
+
+/* Cards dynamically marked covered */
+.card.covered{
+  border-color:rgba(94,224,138,.24)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 0 18px rgba(94,224,138,.055),
+    0 18px 50px rgba(0,0,0,.22)!important;
+}
+.card.covered .yellow,
+.role.covered .yellow{
+  color:#5ee08a!important;
+  text-shadow:
+    0 0 8px rgba(94,224,138,.48),
+    0 0 20px rgba(94,224,138,.20)!important;
+}
+.card.covered .minibar{
+  background:#5ee08a!important;
+  box-shadow:
+    0 0 8px rgba(94,224,138,.55),
+    0 0 22px rgba(94,224,138,.24)!important;
+}
+
+
+/* Restore previous gold/yellow accent */
+:root{
+  --accent:#d7ad48;
+  --success:#2f9e5b;
+}
+.bar,.minibar{
+  background:linear-gradient(90deg,#c8972e,#e1bd64)!important;
+  box-shadow:
+    0 0 8px rgba(215,173,72,.30),
+    0 0 22px rgba(174,126,31,.13)!important;
+}
+.gauge{
+  background:conic-gradient(#d7ad48 calc(var(--p)*1%),rgba(255,255,255,.09) 0)!important;
+  filter:drop-shadow(0 0 10px rgba(215,173,72,.18))!important;
+}
+.yellow,.area-subhead{color:#d7ad48!important;text-shadow:none!important}
+.rank{background:#d7ad48!important;color:#111!important;box-shadow:none!important}
+.pill{
+  background:rgba(215,173,72,.08)!important;
+  border-color:rgba(215,173,72,.22)!important;
+  color:#d7ad48!important;
+  box-shadow:none!important;
+}
+
+/* Deeper money-green covered state */
+.heat100{
+  background:#2f9e5b!important;
+  color:#f5fff8!important;
+  border-color:rgba(64,176,105,.62)!important;
+  box-shadow:
+    0 0 8px rgba(47,158,91,.48),
+    0 0 22px rgba(47,158,91,.22),
+    0 0 38px rgba(47,158,91,.09)!important;
+}
+.card.covered{
+  border-color:rgba(47,158,91,.23)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 0 18px rgba(47,158,91,.045),
+    0 18px 50px rgba(0,0,0,.22)!important;
+}
+.card.covered .yellow,
+.role.covered .yellow{
+  color:#42b86f!important;
+  text-shadow:
+    0 0 8px rgba(47,158,91,.38),
+    0 0 20px rgba(47,158,91,.15)!important;
+}
+.card.covered .minibar{
+  background:linear-gradient(90deg,#267f4a,#42b86f)!important;
+  box-shadow:
+    0 0 8px rgba(47,158,91,.45),
+    0 0 22px rgba(47,158,91,.19)!important;
+}
+
+</style></head>
+<body><main class="app">
+<div class="sticky" id="sticky"><span>THIS SUNDAY</span><span id="stickyStat">—</span></div><div class="eyebrow">First Orlando KIDS</div><h1>Sunday Coverage</h1><div class="sub" id="status">Upload your regular KIDS Weekly Coverage Excel file.</div>
+<div class="toolbar"><label class="upload">Upload Excel<input id="file" type="file" accept=".xlsx,.xls"></label></div>
+<div class="note">Coming up this Sunday!</div>
+<section class="hero"><div class="top"><div><div class="pctbig" id="pct">—</div><div class="small">OVERALL COVERAGE</div></div><div class="sub" id="date">No file loaded</div></div>
+<div class="barbg"><div class="bar" id="bar" style="width:0"></div></div>
+<div class="metrics"><div class="metric"><b id="needed">—</b><span>NEEDED</span></div><div class="metric"><b id="scheduled">—</b><span>SCHEDULED</span></div><div class="metric"><b id="open">—</b><span>OPEN</span></div></div></section>
+
+<div class="section">Sunday Readiness</div>
+<section class="card">
+  <div class="gaugewrap">
+    <div class="gauge" id="gauge"><div class="gaugevalue" id="gaugeValue">—</div></div>
+    <div class="readiness"><b id="readyTitle">Upload staffing</b><div class="small" id="readyText">Your Sunday readiness snapshot will appear here.</div></div>
+  </div>
+</section>
+<div class="section">Staffing Snapshot</div>
+<div class="visualgrid" style="grid-template-columns:1fr">
+  <section class="card"><div class="head"><b>Coverage Heat Map</b><span class="small">AREA × SERVICE</span></div><div class="heat" id="heat"><div class="empty">Upload workbook to view.</div></div></section>
+</div>
+<div class="section">Biggest Needs</div>
+<div class="priority" id="priorities"><div class="empty">Priority roles will appear here.</div></div>
+<div class="section">Service Coverage</div><div class="cards servicegrid" id="services"><div class="empty">Upload the workbook to begin.</div></div>
+<div class="section">Area Coverage</div><div class="cards" id="attention"><div class="empty">Area totals will appear here.</div></div>
+<div class="section">This Sunday (Filters)</div><div class="filters"><select id="service"><option value="">All services</option></select><select id="area"><option value="">All areas</option></select></div>
+<div class="cards" id="roles"><div class="empty">Volunteer roles will appear here.</div></div><div class="footer">KIDS Weekly Coverage Dashboard</div>
+</main>
+<script>
+let rows=[];const $=x=>document.getElementById(x), n=x=>Number(x)||0, t=x=>String(x??"").trim();
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const sum=(a,k)=>a.reduce((z,r)=>z+n(r[k]),0), pc=(s,need)=>need?Math.min(100,Math.round(s/need*100)):100;
+function fileDate(name){let m=name.match(/(\d{1,2})[_-](\d{1,2})[_-](\d{2,4})/);if(!m)return "Current Sunday";let y=m[3].length===2?2000+Number(m[3]):Number(m[3]);let d=new Date(y,Number(m[1])-1,Number(m[2]));return d.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric",year:"numeric"})}
+function fillSelect(id,vals,label){$(id).innerHTML=`<option value="">${label}</option>`+vals.map(v=>`<option>${esc(v)}</option>`).join("")}
+function render(){
+ let need=sum(rows,"Total Needed"), sched=sum(rows,"Total Scheduled"), op=sum(rows,"Open Spots"), p=pc(sched,need);
+ $("needed").textContent=need;$("scheduled").textContent=sched;$("open").textContent=op;$("pct").textContent=p+"%";$("bar").style.width=p+"%";
+ $("gauge").style.setProperty("--p",p);$("gaugeValue").textContent=p+"%";
+ $("readyTitle").textContent=p===100?"Sunday is fully covered":op+" spots remaining";
+ $("readyText").textContent=p===100?"Every staffing need in the workbook is covered.":sched+" of "+need+" positions are currently scheduled.";
+ $("sticky").classList.add("show");$("stickyStat").textContent=p+"% COVERED • "+op+" OPEN";
+
+ let services=[...new Set(rows.map(r=>t(r.Service)).filter(Boolean))];
+ $("services").innerHTML=services.map(s=>{let a=rows.filter(r=>t(r.Service)===s),nn=sum(a,"Total Needed"),ss=sum(a,"Total Scheduled"),oo=sum(a,"Open Spots"),pp=pc(ss,nn);return `<div class="card ${pp===100?"covered":""}"><div class="head"><b>${esc(s)}</b><span class="yellow">${pp}%</span></div><div class="small">${nn} needed • ${ss} scheduled • ${oo} open</div><div class="mini"><div class="minibar" style="width:${pp}%"></div></div></div>`}).join("");
+ let g={};rows.forEach(r=>{let area=t(r.Area);if(!area)return;if(!g[area])g[area]={area:area,needed:0,open:0};g[area].needed+=n(r["Total Needed"]);g[area].open+=n(r["Open Spots"])});
+
+ // Visual staffing snapshot
+ function normService(v){
+   return t(v).toLowerCase().replace(/\s+/g,"").replace("am","").replace(":","");
+ }
+ let serviceOrder=["8:30 AM","10:00 AM","11:30 AM"];
+ let actualServices={};
+ services.forEach(s=>actualServices[normService(s)]=s);
+ let heatServices=serviceOrder.map(s=>actualServices[normService(s)]).filter(Boolean);
+ if(!heatServices.length) heatServices=services.slice(0,3);
+
+ let heatAreas=Object.keys(g).sort((a,b)=>{
+   let order=["welcome team","babies","toddlers","preschool red","preschool blue","elementary","preteen","preschool lg","elementary lg","preteen lg"];
+   let clean=x=>t(x).toLowerCase().replace(/[()]/g,"").replace(/\s+/g," ").trim();
+   let ai=order.indexOf(clean(a)), bi=order.indexOf(clean(b));
+   ai=ai<0?999:ai; bi=bi<0?999:bi;
+   return ai-bi||a.localeCompare(b);
+ });
+
+ let heatHtml='<div class="heatgrid"><div class="heatcell heathead">AREA</div>'+
+   heatServices.map(s=>'<div class="heatcell heathead">'+esc(s)+'</div>').join("");
+
+ heatAreas.forEach(area=>{
+   heatHtml+='<div class="heatcell heatlabel">'+esc(area)+'</div>';
+   heatServices.forEach(s=>{
+     let ar=rows.filter(r=>t(r.Area)===area && t(r.Service)===s);
+     let nn=sum(ar,"Total Needed"), ss=sum(ar,"Total Scheduled");
+     if(nn===0){
+       heatHtml+='<div class="heatcell">—</div>';
+     } else {
+       let hp=pc(ss,nn);
+       let cls=hp>=100?"heat100":hp>=85?"heat85":hp>=70?"heat70":"heatlow";
+       heatHtml+='<div class="heatcell '+cls+'">'+hp+'%</div>';
+     }
+   });
+ });
+ $("heat").innerHTML=heatHtml+'</div>';
+
+ let pri=rows.filter(r=>n(r["Open Spots"])>0)
+   .sort((a,b)=>n(b["Open Spots"])-n(a["Open Spots"]))
+   .slice(0,5);
+ $("priorities").innerHTML=pri.map((r,i)=>
+   '<div class="prioritycard"><div class="rank">'+(i+1)+'</div><div><b>'+esc(r["Room / Role"])+'</b>'+
+   '<div class="small">'+esc(r.Area)+' • '+esc(r.Service)+'</div></div>'+
+   '<div class="pill">'+n(r["Open Spots"])+' OPEN</div></div>'
+ ).join("")||'<div class="empty">Everything is covered!</div>';
+
+ function areaRank(name){
+   let s=t(name).toLowerCase().replace(/[()]/g,"").replace(/\s+/g," ").trim();
+   if(s==="welcome team") return 1;
+   if(s==="babies") return 2;
+   if(s==="toddlers") return 3;
+   if(s==="preschool red") return 4;
+   if(s==="preschool blue") return 5;
+   if(s==="elementary") return 6;
+   if(s==="preteen") return 7;
+   if(s==="preschool lg") return 8;
+   if(s==="elementary lg") return 9;
+   if(s==="preteen lg") return 10;
+   return 999;
+ }
+ let att=Object.values(g).sort((a,b)=>areaRank(a.area)-areaRank(b.area)||a.area.localeCompare(b.area));
+ $("attention").innerHTML=att.map(x=>{let filled=Math.max(0,x.needed-x.open),pp=pc(filled,x.needed);return `<div class="card ${x.open===0?"covered":""}"><div class="head"><div><b>${esc(x.area)}</b><div class="small">${x.needed} needed • ${x.open===0?"Covered":x.open+" open"}</div></div><span class="yellow">${pp}%</span></div><div class="mini"><div class="minibar" style="width:${pp}%"></div></div></div>`}).join("")||'<div class="empty">No area staffing data.</div>';
+ fillSelect("service",services,"All services");fillSelect("area",[...new Set(rows.map(r=>t(r.Area)).filter(Boolean))].sort(),"All areas");renderRoles()
+}
+function renderRoles(){
+ let sf=$("service").value,af=$("area").value;
+ let a=rows
+   .filter(r=>(!sf||t(r.Service)===sf)&&(!af||t(r.Area)===af))
+   .filter(r=>!(n(r["Total Scheduled"])===0 && n(r["Total Needed"])===0))
+   .sort((x,y)=>{
+      if(!sf && !af){
+        const rank=name=>{
+          let s=t(name).toLowerCase().replace(/[()]/g,"").replace(/\s+/g," ").trim();
+          if(s==="welcome team") return 1;
+          if(s==="babies") return 2;
+          if(s==="toddlers") return 3;
+          if(s==="preschool red") return 4;
+          if(s==="preschool blue") return 5;
+          if(s==="elementary") return 6;
+          if(s==="preteen") return 7;
+          if(s==="preschool lg") return 8;
+          if(s==="elementary lg") return 9;
+          if(s==="preteen lg") return 10;
+          return 999;
+        };
+        let ar=rank(x.Area)-rank(y.Area);
+        if(ar!==0) return ar;
+        const serviceRank=v=>{
+          let s=t(v).toLowerCase().replace(/\s+/g,"");
+          if(s==="8:30am"||s==="8:30") return 1;
+          if(s==="10:00am"||s==="10:00"||s==="10am") return 2;
+          if(s==="11:30am"||s==="11:30") return 3;
+          return 999;
+        };
+        let sr=serviceRank(x.Service)-serviceRank(y.Service);
+        if(sr!==0) return sr;
+        return t(x["Room / Role"]).localeCompare(t(y["Room / Role"]));
+      }
+      return n(y["Open Spots"])-n(x["Open Spots"]);
+    });
+
+ let lastArea="";
+ $("roles").innerHTML=a.map(r=>{
+   let scheduled=n(r["Total Scheduled"]), needed=n(r["Total Needed"]), op=n(r["Open Spots"]);
+   let status=op===0?"COVERED":op+" open";
+   let currentArea=t(r.Area);
+   let subhead="";
+   if(currentArea!==lastArea){
+     subhead=`<div class="area-subhead">${esc(currentArea)}</div>`;
+     lastArea=currentArea;
+   }
+   return subhead+`<div class="card role ${op===0?"covered":""}"><div><b>${esc(r["Room / Role"])}</b><div class="small">${esc(r.Service)} • ${scheduled} / ${needed} scheduled</div></div><div class="yellow">${status}</div></div>`;
+ }).join("")||'<div class="empty">No matching roles.</div>' 
+}
+$("file").addEventListener("change",async e=>{let f=e.target.files[0];if(!f)return;try{let wb=XLSX.read(await f.arrayBuffer(),{type:"array"});let sn=wb.SheetNames.find(x=>x.toLowerCase()==="coverage");if(!sn)throw Error("Coverage tab not found.");
+ let raw=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:""});let hi=raw.findIndex(r=>t(r[0])==="Area"&&t(r[1])==="Room / Role");if(hi<0)throw Error("Coverage headers not found.");
+ let headers=raw[hi].map(t);rows=raw.slice(hi+1).filter(r=>t(r[0])&&t(r[2])).map(r=>Object.fromEntries(headers.map((h,i)=>[h,r[i]])));
+ $("status").textContent=`Loaded ${f.name}`;$("date").textContent=fileDate(f.name);render()}catch(err){$("status").textContent="Could not load workbook: "+err.message}});
+$("service").addEventListener("change",renderRoles);$("area").addEventListener("change",renderRoles);
+</script></body></html>
