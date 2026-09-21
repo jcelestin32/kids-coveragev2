@@ -717,6 +717,75 @@ select{
   .heatgrid{grid-template-columns:72px repeat(3,minmax(48px,1fr))!important}
 }
 
+
+/* Mobile v2: slightly larger UI, heat map unchanged */
+@media (max-width:700px){
+  .app{padding:21px 14px 64px!important}
+
+  .eyebrow{font-size:10px!important}
+  h1{font-size:33px!important}
+  #status{font-size:12px!important}
+  .upload{font-size:15px!important;min-height:49px!important}
+  .note{font-size:11px!important}
+
+  .hero{padding:18px!important}
+  .pctbig{font-size:50px!important}
+  #date{font-size:11px!important}
+  .barbg{height:8px!important}
+
+  .metric{min-height:70px!important;padding:12px 4px!important}
+  .metric b{font-size:22px!important}
+  .metric span{font-size:8px!important}
+
+  .section{font-size:10px!important;margin-top:25px!important}
+
+  .card{padding:15px!important}
+  .gaugewrap{grid-template-columns:80px minmax(0,1fr)!important;gap:14px!important}
+  .gauge{width:80px!important;height:80px!important}
+  .gauge:after{width:58px!important;height:58px!important}
+  .gaugevalue{font-size:19px!important}
+  .readiness b{font-size:18px!important}
+  .readiness .small{font-size:11px!important}
+
+  .servicegrid .card{padding:13px 14px!important}
+  .servicegrid .head b{font-size:14px!important}
+  .servicegrid .yellow{font-size:14px!important}
+  .servicegrid .small{font-size:10px!important}
+  .servicegrid .mini{height:6px!important}
+
+  /* Coverage Heat Map intentionally remains at prior mobile size. */
+
+  .priority{gap:7px!important}
+  .prioritycard{
+    grid-template-columns:29px minmax(0,1fr) auto!important;
+    gap:9px!important;
+    padding:11px!important;
+  }
+  .rank{width:29px!important;height:29px!important;font-size:11px!important}
+  .prioritycard b{font-size:12px!important}
+  .prioritycard .small{font-size:9px!important}
+  .pill{font-size:9px!important;padding:5px 7px!important}
+
+  #attention{gap:7px!important}
+  #attention .card{padding:13px 14px!important}
+  #attention .head b{font-size:13px!important}
+  #attention .small{font-size:10px!important}
+  #attention .yellow{font-size:13px!important}
+  #attention .mini{height:6px!important}
+
+  .filters{gap:8px!important}
+  .filters select{min-height:46px!important;font-size:14px!important}
+
+  .area-subhead{font-size:10px!important;margin-top:18px!important}
+  .role{padding:12px 13px!important;gap:9px!important}
+  .role b{font-size:12px!important}
+  .role .small{font-size:9px!important}
+  .role .yellow{font-size:10px!important}
+
+  .footer{font-size:9px!important}
+  .sticky{font-size:10px!important}
+}
+
 </style></head>
 <body><main class="app">
 <div class="sticky" id="sticky"><span>THIS SUNDAY</span><span id="stickyStat">—</span></div><div class="eyebrow">First Orlando KIDS</div><h1>Sunday Coverage</h1><div class="sub" id="status">Upload your regular KIDS Weekly Coverage Excel file.</div>
